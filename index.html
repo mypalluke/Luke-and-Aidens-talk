@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Script</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for smooth transitions */
+        .script-line {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen font-sans selection:bg-blue-500 selection:text-white">
+
+    <div class="max-w-3xl mx-auto p-4 md:p-8">
+        <header class="mb-8 text-center sticky top-0 bg-gray-900/95 backdrop-blur py-4 z-10 border-b border-gray-800">
+            <h1 class="text-2xl md:text-3xl font-bold mb-4 text-blue-400">Practice Script</h1>
+            <div class="flex items-center justify-center space-x-4">
+                <span class="text-gray-400 text-sm uppercase tracking-wide">Main Speaker:</span>
+                
+                <!-- Toggle Container -->
+                <div class="bg-gray-800 p-1 rounded-lg inline-flex relative w-48 h-10 shadow-inner">
+                    <!-- Sliding Indicator -->
+                    <div id="toggle-indicator" class="absolute w-1/2 h-8 bg-blue-600 rounded-md shadow transition-transform duration-300 ease-in-out left-1 top-1"></div>
+                    
+                    <button id="btn-luke" class="w-1/2 relative z-10 font-semibold text-white transition-colors duration-200" onclick="setMainSpeaker('Luke')">Luke</button>
+                    <button id="btn-aiden" class="w-1/2 relative z-10 font-semibold text-gray-400 transition-colors duration-200" onclick="setMainSpeaker('Aiden')">Aiden</button>
+                </div>
+            </div>
+        </header>
+
+        <main id="script-container" class="space-y-6 pb-20">
+            <!-- Script lines will be injected here by JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        // The script data
+        const scriptData = [
+            { speaker: 'Luke', text: 'So this lesson 22 really has helped us to see how we can share the good news with others. Notice this next section... Someone may ask: "What\'s new with you?" How could you use this opportunity to tell the person about what you have learned on your Bible study?' },
+            { speaker: 'Aiden', text: 'Well, I guess I could keep it simple and just say, "I started studying the Bible recently," and then maybe share a specific thought we talked about, like the point we learned about Jesus sending his disciples out by twos to preach at Luke 10:1. I never knew that!' },
+            { speaker: 'Luke', text: 'That is a perfect approach. It’s natural, it’s not pushy, and it leaves the door open if they want to hear more. You\'re already getting the hang of informal witnessing!' },
+            { speaker: 'Aiden', text: 'Thanks. It still feels a little nerve-wracking, but talking to friends and family first makes it easier... I didn\'t realize it, but I\'m actually already doing this.' },
+            { speaker: 'Luke', text: 'That is exactly how most of us start. And as you get more comfortable sharing these truths informally, there is an exciting milestone you can reach for. Have you ever heard the term "unbaptized publisher" mentioned at the meetings?' },
+            { speaker: 'Aiden', text: 'I think so, but I\'m not entirely sure what it means.' },
+            { speaker: 'Luke', text: 'That’s completely understandable. Basically, an unbaptized publisher is someone who isn\'t baptized yet, but who has been approved to go out and share in the organized, public preaching work alongside the congregation. It’s a huge and joyful step in your spiritual progress.' },
+            { speaker: 'Aiden', text: 'Wow. Going out with the congregation sounds like a big step. Do you think I\'m ready for something like that?' },
+            { speaker: 'Luke', text: 'I wouldn\'t bring it up if I didn\'t see the potential in you! You clearly love what you\'re learning, and you already have a desire to tell others. In fact, there is a nice checklist at the end of section 4 of this publication that can help us evaluate that. Let\'s look at it together. It’s titled: "Am I Ready to Preach With the Congregation?"' },
+            { speaker: 'Luke', text: 'It points out that you may be ready to become an unbaptized publisher if you regularly study the Bible, pray, and attend congregation meetings. If you appreciate and believe what you are learning and want to tell others about it. Also, if you love Jehovah and choose as close friends those who love him.' },
+            { speaker: 'Luke', text: 'It also mentions making sure you have withdrawn your membership from any political or false religious association, and that you are living according to Jehovah’s standards and want to be one of Jehovah’s Witnesses. If you feel that you are ready to preach with the congregation, I can arrange for us to meet with the elders together to discuss how you can qualify. It isn\'t a test; it’s just a warm conversation to see how you\'re doing.' },
+            { speaker: 'Aiden', text: 'Okay, that makes sense. I just want to make sure I know enough to answer people\'s questions.' },
+            { speaker: 'Luke', text: 'And you will! You never have to do it alone. You would be paired with experienced publishers, or with me, and we work as a team. How would you feel about making that one of your goals over the next few months?' },
+            { speaker: 'Aiden', text: 'I\'ll have to think about that. That sounds a little overwhelming.' },
+            { speaker: 'Luke', text: 'It\'s understandable. Also know that when you are approved to work in the public ministry, you can even just accompany me in the work, you don\'t even need to talk. One step at a time. And do you remember who else will be with you?' },
+            { speaker: 'Aiden', text: 'Jehovah.' },
+            { speaker: 'Luke', text: 'That\'s right! With His backing, we can do anything. We will take it one step at a time, at your pace. Let\'s take a look at the "Goal" box at the end of this lesson and see what practical step we can take this week to get you closer to that milestone.' }
+        ];
+
+        let currentMainSpeaker = 'Luke';
+        const container = document.getElementById('script-container');
+        const indicator = document.getElementById('toggle-indicator');
+        const btnLuke = document.getElementById('btn-luke');
+        const btnAiden = document.getElementById('btn-aiden');
+
+        function setMainSpeaker(speaker) {
+            currentMainSpeaker = speaker;
+            
+            // Update toggle UI
+            if (speaker === 'Luke') {
+                indicator.style.transform = 'translateX(0)';
+                btnLuke.classList.replace('text-gray-400', 'text-white');
+                btnAiden.classList.replace('text-white', 'text-gray-400');
+            } else {
+                // Assuming w-1/2 means it needs to shift 100% of its own width minus some padding buffer if needed.
+                // In tailwind w-48 is 12rem, w-1/2 is 6rem. Shifting 100% moves it right exactly half.
+                indicator.style.transform = 'translateX(calc(100% - 0.25rem))'; 
+                btnAiden.classList.replace('text-gray-400', 'text-white');
+                btnLuke.classList.replace('text-white', 'text-gray-400');
+            }
+
+            renderScript();
+        }
+
+        function renderScript() {
+            container.innerHTML = ''; // Clear current content
+
+            scriptData.forEach(line => {
+                const isMain = line.speaker === currentMainSpeaker;
+                
+                const lineDiv = document.createElement('div');
+                // Base classes
+                lineDiv.className = `script-line p-4 rounded-xl shadow-sm border ${
+                    isMain 
+                        ? 'bg-gray-800 border-gray-700 ml-4 md:ml-12 border-l-4 border-l-blue-500' 
+                        : 'bg-gray-900 border-gray-800 opacity-60 hover:opacity-80 mr-4 md:mr-12'
+                }`;
+
+                const speakerSpan = document.createElement('div');
+                speakerSpan.className = `font-bold mb-1 ${
+                    isMain ? 'text-blue-400 text-lg md:text-xl' : 'text-gray-500 text-sm md:text-base'
+                }`;
+                speakerSpan.textContent = line.speaker;
+
+                const textP = document.createElement('p');
+                textP.className = `leading-relaxed ${
+                    isMain ? 'text-gray-100 text-xl md:text-2xl' : 'text-gray-400 text-base md:text-lg'
+                }`;
+                textP.innerHTML = line.text;
+
+                lineDiv.appendChild(speakerSpan);
+                lineDiv.appendChild(textP);
+                container.appendChild(lineDiv);
+            });
+        }
+
+        // Initialize the app
+        renderScript();
+    </script>
+</body>
+</html>
