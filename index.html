@@ -17,6 +17,9 @@
     <div class="max-w-3xl mx-auto p-4 md:p-8">
         <header class="mb-8 text-center sticky top-0 bg-gray-900/95 backdrop-blur py-4 z-10 border-b border-gray-800">
             <h1 class="text-2xl md:text-3xl font-bold mb-4 text-blue-400">Practice Script</h1>
+            <div id="timer-display" class="absolute top-4 right-4 md:right-8 font-mono text-xl font-bold text-gray-300 bg-gray-800 px-3 py-1 rounded-md shadow-inner cursor-pointer" onclick="toggleTimer()" title="Click to start/pause">
+                05:00
+            </div>
             <div class="flex items-center justify-center space-x-4">
                 <span class="text-gray-400 text-sm uppercase tracking-wide">Main Speaker:</span>
                 
@@ -63,6 +66,49 @@
         const indicator = document.getElementById('toggle-indicator');
         const btnLuke = document.getElementById('btn-luke');
         const btnAiden = document.getElementById('btn-aiden');
+
+        const timerDisplay = document.getElementById('timer-display');
+        let totalSeconds = 300; // 5 minutes = 300 seconds
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        function formatTime(seconds) {
+            const isNegative = seconds < 0;
+            const absSeconds = Math.abs(seconds);
+            const mins = Math.floor(absSeconds / 60);
+            const secs = absSeconds % 60;
+            const sign = isNegative ? '-' : '';
+            return `${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(totalSeconds);
+            if (totalSeconds < 0) {
+                timerDisplay.classList.replace('text-gray-300', 'text-red-500');
+                timerDisplay.classList.add('animate-pulse');
+            } else {
+                timerDisplay.classList.replace('text-red-500', 'text-gray-300');
+                timerDisplay.classList.remove('animate-pulse');
+            }
+        }
+
+        function toggleTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                timerDisplay.classList.remove('ring-2', 'ring-blue-500'); // Visual cue for paused
+            } else {
+                timerDisplay.classList.add('ring-2', 'ring-blue-500'); // Visual cue for running
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        // Initialize the timer display
+        updateTimerDisplay();
 
         function setMainSpeaker(speaker) {
             currentMainSpeaker = speaker;
